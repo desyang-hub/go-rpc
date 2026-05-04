@@ -31,6 +31,15 @@ import (
 // BuildOption is a functional option for configuring the gRPC server.
 type BuildOption func(*grpc.Server)
 
+// ServiceInfo contains information about a registered service instance.
+type ServiceInfo struct {
+	Name     string
+	Addr     string
+	Metadata map[string]string
+	TTL      time.Duration
+	Healthy  bool
+}
+
 // RegistryBuilder creates a new registry instance for service discovery.
 type RegistryBuilder interface {
 	Build() RegistryInstance
@@ -41,15 +50,6 @@ type RegistryInstance interface {
 	Register(ctx context.Context, service ServiceInfo) error
 	Deregister(ctx context.Context, service ServiceInfo) error
 	Watch(ctx context.Context) (<-chan ServiceInfo, error)
-}
-
-// ServiceInfo contains information about a registered service instance.
-type ServiceInfo struct {
-	Name     string
-	Addr     string
-	Metadata map[string]string
-	TTL      time.Duration
-	Healthy  bool
 }
 
 // Config contains all server configuration.
