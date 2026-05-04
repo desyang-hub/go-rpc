@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package grpc.health.v1;
+
+option go_package = "github.com/grpc-ecosystem/grpc-health-probe/health;health";
+
+// HealthCheckRequest 健康检查请求
+message HealthCheckRequest {
+  string service = 1;  // 要检查的服务名称（为空表示检查所有服务）
+}
+
+// HealthCheckResponse 健康检查响应
+message HealthCheckResponse {
+  enum ServingStatus {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+    SERVICE_UNKNOWN = 3;  // 使用此状态表示服务存在但未配置
+  }
+  ServingStatus status = 1;
+}
+
+// Health 服务定义 - gRPC 健康检查标准接口
+service Health {
+  // Check 用于单链路健康检查
+  rpc Check (HealthCheckRequest) returns (HealthCheckResponse);
+}

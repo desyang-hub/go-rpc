@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package go_rpc.api.v1;
+
+option go_package = "github.com/desyang/go-rpc/api;genapi";
+
+// ==================== HelloService 示例服务 ====================
+
+// HelloRequest 定义请求消息结构
+message HelloRequest {
+  string name = 1;           // 请求者名称
+  string greet_type = 2;     // 问候类型 (greeting/farewell)
+}
+
+// HelloResponse 定义响应消息结构
+message HelloResponse {
+  string message = 1;        // 问候消息
+  string timestamp = 2;      // 响应时间戳 (RFC3339 格式)
+  string server_id = 3;      // 响应服务器 ID
+}
+
+// HelloStreamRequest 流式请求消息
+message HelloStreamRequest {
+  string name = 1;
+  int32 index = 2;           // 用于识别流中的第几个请求
+}
+
+// HelloStreamResponse 流式响应消息
+message HelloStreamResponse {
+  string message = 1;
+  int32 response_index = 2;  // 响应序号
+}
+
+// HelloService 定义四种调用模式的 RPC 服务
+service HelloService {
+  // UnaryRPC: 一元 RPC（请求-响应模式）
+  rpc Hello (HelloRequest) returns (HelloResponse);
+
+  // ServerStreaming: 服务端流式 RPC（1 个请求 -> N 个响应）
+  rpc HelloStream (HelloRequest) returns (stream HelloStreamResponse);
+
+  // ClientStreaming: 客户端流式 RPC（N 个请求 -> 1 个响应）
+  rpc BatchHello (stream HelloRequest) returns (HelloResponse);
+
+  // BidirectionalStreaming: 双向流式 RPC（N 个请求 <-> N 个响应）
+  rpc HelloStreamStream (stream HelloStreamRequest) returns (stream HelloStreamResponse);
+}
+
+// ==================== EchoService 性能测试服务 ====================
+
+message EchoRequest {
+  string payload = 1;        // 消息载荷
+  bytes data = 2;            // 二进制数据载荷（用于性能测试）
+  bool echo_headers = 3;     // 是否回显传入的元数据
+}
+
+message EchoResponse {
+  string payload = 1;
+  bytes data = 2;
+  map<string, string> headers = 3;  // 回显的元数据
+}
+
+message EchoStreamRequest {
+  string payload = 1;
+}
+
+message EchoStreamResponse {
+  string payload = 1;
+  int32 index = 2;
+}
+
+// EchoService 用于性能基准测试
+service EchoService {
+  rpc Echo (EchoRequest) returns (EchoResponse);
+  rpc EchoStream (EchoRequest) returns (stream EchoStreamResponse);
+  rpc Ping (PingRequest) returns (PingResponse);
+}
+
+message PingRequest {
+  string payload = 1;
+}
+
+message PingResponse {
+  string payload = 1;
+  string timestamp = 2;
+  int64 latency_us = 3;      // 往返延迟（微秒）
+}

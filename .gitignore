@@ -1,0 +1,42 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go build artifacts
+*_test
+test.test
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Generated proto code
+*_pb.go
+*_grpc_pb.go
+*_pb_grpc.go
+
+# go-rpc generated code
+generated/
+
+# Docker
+*.pid
+*.seed
+
+# Coverage
+coverage*
+
+# Local config
+*.local.yaml
+*.local.json
+
+# macOS
+.DS_Store
+
+# Changelog tool
+.git-cliff
