@@ -1,0 +1,44 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+
+  - repo: https://github.com/psf/black
+    rev: 24.4.2
+    hooks:
+      - id: black
+        files: \.(py)$
+
+  - repo: https://github.com/google/yapf
+    rev: v0.40.2
+    hooks:
+      - id: yapf
+        files: \.(py)$
+
+  - repo: local
+    hooks:
+      - id: go-fmt
+        name: go fmt
+        entry: bash -c 'cd go-rpc && gofmt -l -w . 2>/dev/null || true'
+        language: system
+        types: [go]
+        files: \.go$
+
+      - id: go-imports
+        name: go imports
+        entry: bash -c 'which goimports >/dev/null 2>&1 && cd go-rpc && goimports -w . 2>/dev/null || true'
+        language: system
+        types: [go]
+        files: \.go$
+
+      - id: golangci-lint
+        name: golangci-lint
+        entry: bash -c 'which golangci-lint >/dev/null 2>&1 && cd go-rpc && golangci-lint run --fix 2>/dev/null || true'
+        language: system
+        types: [go]
+        files: \.go$

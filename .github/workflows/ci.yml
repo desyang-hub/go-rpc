@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  GO_VERSION: "1.22"
+  PYTHON_VERSION: "3.12"
+  NODE_VERSION: "20"
+
+jobs:
+  lint:
+    name: Golang Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: v1.56
+          args: --timeout=5m
+
+  test:
+    name: Go Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Run tests
+        run: |
+          go test -race -coverprofile=coverage.out -covermode=atomic ./...
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.out
+          fail_ci_if_error: false
+
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run gosec security scanner
+        uses: securego/gosec@master
+        with:
+          args: -exclude-generated ./...
+
+  examples-check:
+    name: Check Examples
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: Go Server
+            path: examples/go-server
+            type: go
+          - name: Python Client
+            path: examples/python-client
+            type: python
+          - name: TypeScript Client
+            path: examples/ts-client
+            type: node
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup ${{ matrix.type }}
+        if: matrix.type == 'go'
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Setup Python
+        if: matrix.type == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Setup Node
+        if: matrix.type == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Check build
+        run: |
+          cd ${{ matrix.path }}
+          if [ "${{ matrix.type }}" = "go" ]; then
+            go build ./...
+          elif [ "${{ matrix.type }}" = "python" ]; then
+            pip install -r requirements.txt --dry-run
+          elif [ "${{ matrix.type }}" = "node" ]; then
+            npm ci || npm install --dry-run
+          fi

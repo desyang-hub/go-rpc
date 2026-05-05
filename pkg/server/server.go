@@ -372,3 +372,8 @@ func (s *Server) Addr() string {
 	return s.addr
 }
 
+
+// GRPCServer returns the underlying grpc.Server instance for service registration.
+func (s *Server) GRPCServer() *grpc.Server {
+	return s.grpcServer
+}
