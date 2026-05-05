@@ -199,13 +199,17 @@ func ToPascalCase(s string) string {
 	if len(words) == 1 && strings.ContainsAny(words[0], "abcdefghijklmnopqrstuvwxyz") {
 		word := words[0]
 		var split []string
-		for i, r := range word {
+		i := 0
+		for i < len(word) {
+			r := rune(word[i])
 			if i > 0 && r >= 'A' && r <= 'Z' {
 				// Split before uppercase letter
 				split = append(split, word[:i])
 				word = word[i:]
 				i = 0
+				continue
 			}
+			i++
 		}
 		split = append(split, word)
 		words = split
