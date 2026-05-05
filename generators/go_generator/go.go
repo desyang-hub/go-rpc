@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"go-rpc/generators"
+	"github.com/desyang-hub/go-rpc/generators"
 )
 
 // GoPlugin implements the LanguagePlugin interface for Go code generation.

@@ -1,4 +1,4 @@
-module github.com/desyang/go-rpc
+module github.com/desyang-hub/go-rpc
 
 go 1.21
 

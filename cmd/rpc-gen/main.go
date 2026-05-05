@@ -7,10 +7,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"go-rpc/generators"
-	"go-rpc/generators/go_generator"
-	"go-rpc/generators/python_generator"
-	"go-rpc/generators/typescript_generator"
+	"github.com/desyang-hub/go-rpc/generators"
+	"github.com/desyang-hub/go-rpc/generators/go_generator"
+	"github.com/desyang-hub/go-rpc/generators/python_generator"
+	"github.com/desyang-hub/go-rpc/generators/typescript_generator"
 )
 
 var version = "dev"

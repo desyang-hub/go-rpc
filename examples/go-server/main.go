@@ -20,10 +20,10 @@ import (
 	"time"
 
 
-	"go-rpc/pkg/server"
-	pb "go-rpc/api/genapi"
-	"go-rpc/internal/observability"
-	"go-rpc/internal/healthcheck"
+	"github.com/desyang-hub/go-rpc/pkg/server"
+	pb "github.com/desyang-hub/go-rpc/api/genapi"
+	"github.com/desyang-hub/go-rpc/internal/observability"
+	"github.com/desyang-hub/go-rpc/internal/healthcheck"
 )
 
 const (

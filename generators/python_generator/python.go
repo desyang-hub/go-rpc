@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"go-rpc/generators"
+	"github.com/desyang-hub/go-rpc/generators"
 )
 
 // PythonPlugin implements the LanguagePlugin interface for Python code generation.

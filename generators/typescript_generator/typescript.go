@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"go-rpc/generators"
+	"github.com/desyang-hub/go-rpc/generators"
 )
 
 // TypeScriptPlugin implements the LanguagePlugin interface for TypeScript code generation.
