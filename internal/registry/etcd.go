@@ -7,7 +7,7 @@ import (
 	"path"
 	"time"
 
-	clientv3 "github.com/coreos/etcd/client/v3"
+	clientv3 "go.etcd.io/etcd/client/v3"
 )
 
 // EtcdConfig contains etcd-specific configuration.
