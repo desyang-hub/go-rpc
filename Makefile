@@ -1,7 +1,7 @@
 # go-rpc Makefile - 构建、生成、测试入口
 
 # ==================== 变量定义 ====================
-MODULE_NAME    := github.com/desyang/go-rpc
+MODULE_NAME    := github.com/desyang-hub/go-rpc
 GO             := go
 PROTOC         := protoc
 PROTOC_GEN_GO  := protoc-gen-go

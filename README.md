@@ -32,7 +32,7 @@
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/desyang/go-rpc.git
+git clone https://github.com/desyang-hub/go-rpc.git
 cd go-rpc
 ```
 

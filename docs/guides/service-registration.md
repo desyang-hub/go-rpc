@@ -86,7 +86,7 @@ func generateServiceID(name string) string {
 go-rpc provides built-in health check endpoints:
 
 ```go
-import "github.com/desyang/go-rpc/pkg/health"
+import "github.com/desyang-hub/go-rpc/pkg/health"
 
 healthMiddleware := health.NewMiddleware(
     health.WithTCPCheck(":50052"),

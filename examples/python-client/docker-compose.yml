@@ -16,7 +16,7 @@ services:
       - CLIENT_PORT=50051
 
   go-rpc-server:
-    image: ghcr.io/desyang/go-rpc-server:latest
+    image: ghcr.io/desyang-hub/go-rpc-server:latest
     ports:
       - "50051:50051"
       - "9090:9090"

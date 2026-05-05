@@ -5,7 +5,7 @@ Contributions are welcome! Here are guidelines to help.
 ## Development Setup
 
 ```bash
-git clone https://github.com/desyang/go-rpc.git
+git clone https://github.com/desyang-hub/go-rpc.git
 cd go-rpc
 make setup
 ```

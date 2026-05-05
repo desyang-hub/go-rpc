@@ -6,9 +6,9 @@ Cross-language interoperability allows services written in different languages t
 
 | Language | Status | Module |
 |----------|--------|--------|
-| Go | Production | `github.com/desyang/go-rpc/pkg/server` |
+| Go | Production | `github.com/desyang-hub/go-rpc/pkg/server` |
 | Python | Production | `pip install go-rpc-client` |
-| TypeScript | Beta | `npm install @desyang/go-rpc-client` |
+| TypeScript | Beta | `npm install @desyang-hub/go-rpc-client` |
 
 ## Architecture
 

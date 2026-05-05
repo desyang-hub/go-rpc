@@ -30,7 +30,7 @@ type Config struct {
 ### Building a Server
 
 ```go
-import "github.com/desyang/go-rpc/pkg/server"
+import "github.com/desyang-hub/go-rpc/pkg/server"
 
 srv := server.NewServer()
 srv.Configure(server.Config{
@@ -104,7 +104,7 @@ func (s *Server) RegisterHealthCheck(handler *health.StatusCheck)
 Registers a health check endpoint.
 
 ```go
-import "github.com/desyang/go-rpc/pkg/health"
+import "github.com/desyang-hub/go-rpc/pkg/health"
 
 handler := health.NewStatusCheck()
 srv.RegisterHealthCheck(handler)

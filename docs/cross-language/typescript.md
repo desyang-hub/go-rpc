@@ -5,7 +5,7 @@ This guide covers integrating TypeScript clients with your go-rpc services.
 ## Installation
 
 ```bash
-npm install @desyang/go-rpc-client
+npm install @desyang-hub/go-rpc-client
 ```
 
 Or add to package.json:
@@ -13,7 +13,7 @@ Or add to package.json:
 ```json
 {
   "dependencies": {
-    "@desyang/go-rpc-client": "^0.2.0"
+    "@desyang-hub/go-rpc-client": "^0.2.0"
   }
 }
 ```
@@ -21,7 +21,7 @@ Or add to package.json:
 ## Quick Start
 
 ```typescript
-import { Client, Config } from '@desyang/go-rpc-client';
+import { Client, Config } from '@desyang-hub/go-rpc-client';
 
 async function main() {
   // Create a client with configuration
@@ -88,7 +88,7 @@ main().catch(console.error);
 ## React Hook Integration
 
 ```typescript
-import { useGrpcCall } from '@desyang/go-rpc-client/react';
+import { useGrpcCall } from '@desyang-hub/go-rpc-client/react';
 
 function HelloComponent() {
   const [result, setResult] = useState(null);
@@ -126,7 +126,7 @@ function HelloComponent() {
 ## Error Handling
 
 ```typescript
-import { RpcError } from '@desyang/go-rpc-client';
+import { RpcError } from '@desyang-hub/go-rpc-client';
 
 try {
   const result = await client.call('HelloService.Hello', { name: 'World' });

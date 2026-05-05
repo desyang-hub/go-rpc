@@ -19,7 +19,7 @@ tracing:
 ### Go Configuration
 
 ```go
-import "github.com/desyang/go-rpc/pkg/opentelemetry"
+import "github.com/desyang-hub/go-rpc/pkg/opentelemetry"
 
 tracer, err := opentelemetry.NewTracer(
     "my-service",
@@ -70,7 +70,7 @@ metrics:
 ### Go Configuration
 
 ```go
-import "github.com/desyang/go-rpc/pkg/prometheus"
+import "github.com/desyang-hub/go-rpc/pkg/prometheus"
 
 metrics := prometheus.NewMetrics("my-service")
 
@@ -124,7 +124,7 @@ logging:
 ### Go Configuration
 
 ```go
-import "github.com/desyang/go-rpc/pkg/logging"
+import "github.com/desyang-hub/go-rpc/pkg/logging"
 
 logger := logging.New(
     logging.WithLevel("info"),

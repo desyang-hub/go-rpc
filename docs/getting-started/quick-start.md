@@ -11,7 +11,7 @@ Learn how to use go-rpc in your project.
 ## Installation
 
 ```bash
-go get github.com/desyang/go-rpc/pkg/...
+go get github.com/desyang-hub/go-rpc/pkg/...
 ```
 
 ## Basic Usage
@@ -47,8 +47,8 @@ protoc --go_out=. --go-grpc_out=. api/hello.proto
 ### 3. Implement Server
 
 ```go
-import "github.com/desyang/go-rpc/pkg/server"
-import "github.com/desyang/go-rpc/pkg/middleware"
+import "github.com/desyang-hub/go-rpc/pkg/server"
+import "github.com/desyang-hub/go-rpc/pkg/middleware"
 
 func main() {
     srv := server.NewServer().
@@ -68,7 +68,7 @@ func main() {
 ### 4. Implement Client
 
 ```go
-import "github.com/desyang/go-rpc/pkg/client"
+import "github.com/desyang-hub/go-rpc/pkg/client"
 
 func main() {
     cl := client.NewClient().

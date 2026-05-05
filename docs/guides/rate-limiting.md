@@ -38,7 +38,7 @@ ratelimit:
 ### Go Configuration
 
 ```go
-import "github.com/desyang/go-rpc/pkg/limiter"
+import "github.com/desyang-hub/go-rpc/pkg/limiter"
 
 limiter := limiter.New(limiter.Config{
     Algorithm: limiter.TokenBucket,

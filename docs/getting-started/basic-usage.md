@@ -10,8 +10,8 @@ package main
 import (
     "context"
     "time"
-    "github.com/desyang/go-rpc/pkg/server"
-    "github.com/desyang/go-rpc/pkg/middleware"
+    "github.com/desyang-hub/go-rpc/pkg/server"
+    "github.com/desyang-hub/go-rpc/pkg/middleware"
 )
 
 func main() {
@@ -40,7 +40,7 @@ package main
 import (
     "context"
     "time"
-    "github.com/desyang/go-rpc/pkg/client"
+    "github.com/desyang-hub/go-rpc/pkg/client"
 )
 
 func main() {

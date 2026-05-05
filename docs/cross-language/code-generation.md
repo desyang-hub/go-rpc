@@ -10,10 +10,10 @@ This guide covers using the `rpc-gen` CLI tool to generate client code for multi
 
 ```bash
 # From source
-go install github.com/desyang/go-rpc/cmd/rpc-gen@latest
+go install github.com/desyang-hub/go-rpc/cmd/rpc-gen@latest
 
 # Download binary
-curl -fsSL https://github.com/desyang/go-rpc/releases/download/v0.2.0/rpc-gen_linux_amd64 -o rpc-gen
+curl -fsSL https://github.com/desyang-hub/go-rpc/releases/download/v0.2.0/rpc-gen_linux_amd64 -o rpc-gen
 chmod +x rpc-gen
 ```
 
@@ -130,7 +130,7 @@ Extend `rpc-gen` with custom plugins:
 // plugin.go
 package main
 
-import "github.com/desyang/go-rpc/pkg/generator"
+import "github.com/desyang-hub/go-rpc/pkg/generator"
 
 // Register custom generator
 generator.Register("java", func(g *generator.Generator) error {

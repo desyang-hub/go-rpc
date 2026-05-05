@@ -34,23 +34,23 @@ Required for running examples and development environment.
 Add to your Go module:
 
 ```bash
-go get github.com/desyang/go-rpc/pkg/server
-go get github.com/desyang/go-rpc/pkg/client
-go get github.com/desyang/go-rpc/pkg/middleware
+go get github.com/desyang-hub/go-rpc/pkg/server
+go get github.com/desyang-hub/go-rpc/pkg/client
+go get github.com/desyang-hub/go-rpc/pkg/middleware
 ```
 
 Or add to go.mod directly:
 
 ```go
 require (
-    github.com/desyang/go-rpc v0.2.0
+    github.com/desyang-hub/go-rpc v0.2.0
 )
 ```
 
 ## Install rpc-gen CLI
 
 ```bash
-go install github.com/desyang/go-rpc/cmd/rpc-gen@latest
+go install github.com/desyang-hub/go-rpc/cmd/rpc-gen@latest
 ```
 
 Verify installation:

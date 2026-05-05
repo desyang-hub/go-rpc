@@ -17,7 +17,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 
-	"github.com/desyang/go-rpc/internal/loadbalancer"
+	"github.com/desyang-hub/go-rpc/internal/loadbalancer"
 )
 
 // ConnConfig contains connection configuration for a single instance.

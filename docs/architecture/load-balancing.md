@@ -13,7 +13,7 @@ Client-side load balancing distributes requests across multiple server instances
 Distributes requests round-robin across all available instances.
 
 ```go
-import "github.com/desyang/go-rpc/pkg/loadbalancer"
+import "github.com/desyang-hub/go-rpc/pkg/loadbalancer"
 
 balancer := loadbalancer.NewRoundRobin()
 ```
@@ -90,8 +90,8 @@ loadbalancer:
 ## Example Usage
 
 ```go
-import "github.com/desyang/go-rpc/pkg/client"
-import "github.com/desyang/go-rpc/pkg/loadbalancer"
+import "github.com/desyang-hub/go-rpc/pkg/client"
+import "github.com/desyang-hub/go-rpc/pkg/loadbalancer"
 
 balancer := loadbalancer.NewRoundRobin(
     loadbalancer.WithHealthCheck(10*time.Second),

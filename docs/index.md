@@ -17,7 +17,7 @@ hero:
       link: /architecture/overview/
     - theme: alt
       text: Find on GitHub
-      link: https://github.com/desyang/go-rpc
+      link: https://github.com/desyang-hub/go-rpc
 ---
 
 ## Key Features

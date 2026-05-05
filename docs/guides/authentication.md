@@ -31,7 +31,7 @@ auth:
 ### Go Configuration
 
 ```go
-import "github.com/desyang/go-rpc/pkg/middleware"
+import "github.com/desyang-hub/go-rpc/pkg/middleware"
 
 // Token validation function
 validator := func(token string) bool {
@@ -120,7 +120,7 @@ auth:
 ### Go Configuration
 
 ```go
-import "github.com/desyang/go-rpc/pkg/middleware"
+import "github.com/desyang-hub/go-rpc/pkg/middleware"
 
 jwtMiddleware := middleware.JWT(
     middleware.WithIssuer("my-auth-server"),

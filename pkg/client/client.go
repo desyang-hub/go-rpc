@@ -27,8 +27,8 @@ import (
 	"google.golang.org/grpc/credentials"
 	grpckeepalive "google.golang.org/grpc/keepalive"
 
-	"github.com/desyang/go-rpc/internal/loadbalancer"
-	"github.com/desyang/go-rpc/pkg/middleware"
+	"github.com/desyang-hub/go-rpc/internal/loadbalancer"
+	"github.com/desyang-hub/go-rpc/pkg/middleware"
 )
 
 // Config contains all client configuration.

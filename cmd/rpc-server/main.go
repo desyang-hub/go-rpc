@@ -16,7 +16,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/desyang/go-rpc/pkg/server"
+	"github.com/desyang-hub/go-rpc/pkg/server"
 )
 
 // Version is set at build time.

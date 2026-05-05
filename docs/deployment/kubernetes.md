@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: rpc-server
-          image: ghcr.io/desyang/go-rpc:v1.0.0
+          image: ghcr.io/desyang-hub/go-rpc:v1.0.0
           ports:
             - containerPort: 50051  # gRPC
             - containerPort: 9090  # metrics

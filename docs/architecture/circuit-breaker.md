@@ -52,7 +52,7 @@ The circuit breaker pattern prevents cascade failures by stopping requests to fa
 ## Configuration
 
 ```go
-import "github.com/desyang/go-rpc/pkg/circuitbreaker"
+import "github.com/desyang-hub/go-rpc/pkg/circuitbreaker"
 
 cb := circuitbreaker.New("my-service",
     circuitbreaker.WithFailureThreshold(5),      // 连续失败 5 次打开
@@ -79,7 +79,7 @@ circuit_breaker:
 Define fallback logic when the circuit breaker is open:
 
 ```go
-import "github.com/desyang/go-rpc/pkg/circuitbreaker"
+import "github.com/desyang-hub/go-rpc/pkg/circuitbreaker"
 
 fallback := func() (interface{}, error) {
     // Return cached data or default response

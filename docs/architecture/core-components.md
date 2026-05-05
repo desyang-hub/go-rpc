@@ -11,7 +11,7 @@ The go-rpc framework consists of several core components that work together to p
 The server component handles gRPC server lifecycle management.
 
 ```go
-import "github.com/desyang/go-rpc/pkg/server"
+import "github.com/desyang-hub/go-rpc/pkg/server"
 
 // Create a new server with configuration
 srv := server.NewServer().
@@ -52,7 +52,7 @@ srv := server.NewServer().
 The client component manages connections to remote services.
 
 ```go
-import "github.com/desyang/go-rpc/pkg/client"
+import "github.com/desyang-hub/go-rpc/pkg/client"
 
 cl := client.NewClient().
     Address("server:50051").

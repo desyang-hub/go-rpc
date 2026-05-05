@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package go_rpc.api.v1;
 
-option go_package = "github.com/desyang/go-rpc/api;genapi";
+option go_package = "github.com/desyang-hub/go-rpc/api;genapi";
 
 // ==================== gRPC-Gateway Options ====================
 import "google/api/annotations.proto";

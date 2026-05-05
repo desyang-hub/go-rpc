@@ -84,7 +84,7 @@ discovery:
 ### Go Usage
 
 ```go
-import "github.com/desyang/go-rpc/pkg/discovery/consul"
+import "github.com/desyang-hub/go-rpc/pkg/discovery/consul"
 
 registry := consul.NewRegistry(consul.Config{
     Address:  "localhost:8500",
@@ -134,7 +134,7 @@ discovery:
 ### Go Usage
 
 ```go
-import "github.com/desyang/go-rpc/pkg/discovery/etcd"
+import "github.com/desyang-hub/go-rpc/pkg/discovery/etcd"
 
 registry := etcd.NewRegistry(etcd.Config{
     Endpoints: []string{"localhost:2379", "localhost:2380"},

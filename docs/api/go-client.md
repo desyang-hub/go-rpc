@@ -43,7 +43,7 @@ type RetryPolicy struct {
 ### Building a Client
 
 ```go
-import "github.com/desyang/go-rpc/pkg/client"
+import "github.com/desyang-hub/go-rpc/pkg/client"
 
 // Simple client
 cl := client.NewClient().

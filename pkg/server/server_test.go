@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/desyang/go-rpc/pkg/server"
+	"github.com/desyang-hub/go-rpc/pkg/server"
 )
 
 func TestServerBuilderDefaults(t *testing.T) {
