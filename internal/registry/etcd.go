@@ -2,7 +2,6 @@ package registry
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"path"
 	"time"
@@ -64,7 +63,7 @@ func (r *EtcdRegistry) setLeaseID(key string, leaseID int64) {
 // Register registers a service instance with etcd using lease-based TTL.
 func (r *EtcdRegistry) Register(ctx context.Context, service ServiceInfo) error {
 	key := r.getServiceKey(service)
-	value := createServiceJSON(service)
+	value := service.ToJSON()
 
 	ttlSec := int64(r.config.TTL.Seconds())
 	if ttlSec <= 0 {
@@ -75,7 +74,7 @@ func (r *EtcdRegistry) Register(ctx context.Context, service ServiceInfo) error 
 		return fmt.Errorf("failed to grant lease: %w", err)
 	}
 
-	r.setLeaseID(key, lease.ID)
+	r.setLeaseID(key, int64(lease.ID))
 
 	_, err = r.client.Put(ctx, key, value, clientv3.WithLease(lease.ID))
 	if err != nil {
@@ -84,7 +83,7 @@ func (r *EtcdRegistry) Register(ctx context.Context, service ServiceInfo) error 
 
 	tick := r.config.TickInterval
 	if tick == 0 {
-		tick = ttlSec / 3 * time.Second
+		tick = time.Duration(int64(ttlSec)/3) * time.Second
 	}
 	go func() {
 		ticker := time.NewTicker(tick)
@@ -93,7 +92,7 @@ func (r *EtcdRegistry) Register(ctx context.Context, service ServiceInfo) error 
 			select {
 			case <-ctx.Done():
 				if id, ok := r.leases[key]; ok {
-					_ = r.client.Revoke(ctx, id)
+					_, _ = r.client.Revoke(ctx, clientv3.LeaseID(id))
 				}
 				return
 			case <-ticker.C:
@@ -116,7 +115,7 @@ func (r *EtcdRegistry) Deregister(ctx context.Context, service ServiceInfo) erro
 		return fmt.Errorf("failed to deregister service: %w", err)
 	}
 	if id, ok := r.leases[key]; ok {
-		_ = r.client.Revoke(ctx, id)
+		_, _ = r.client.Revoke(ctx, clientv3.LeaseID(id))
 		delete(r.leases, key)
 	}
 	return nil

@@ -42,8 +42,6 @@ func (p *TypeScriptPlugin) Generate(config generators.GenConfig, parsed *generat
 	useGateway := config.Options["generate_gateway"] == "true"
 
 	for _, svc := range parsed.Services {
-		pascalName := generators.ToPascalCase(svc.Name)
-
 		if useGateway {
 			// Generate HTTP/REST client for gateway mode
 			clientContent, err := p.generateGatewayClient(config, parsed, svc)
@@ -171,7 +169,7 @@ func (p *TypeScriptPlugin) generateGatewayClient(config generators.GenConfig, pa
 	// Generate request/response interfaces for each method
 	b.WriteString("// ==================== Request/Response Types ====================\n\n")
 	for _, method := range svc.Methods {
-		b.WriteString(fmt.Sprintf("// %s %s\n", method.Name, method.Comment))
+		b.WriteString(fmt.Sprintf("// %s\n", method.Name))
 		b.WriteString(fmt.Sprintf("export interface %sRequest {\n", method.InputType))
 		// Parse the input fields from proto definition
 		b.WriteString(fmt.Sprintf("  // Input type: %s\n", method.InputType))
@@ -196,7 +194,7 @@ func (p *TypeScriptPlugin) generateGatewayClient(config generators.GenConfig, pa
 	b.WriteString(fmt.Sprintf("export class %s(restBaseURL: string = '%s') {\n", pascalName, baseURL))
 	b.WriteString("  private readonly baseUrl: string;\n")
 	b.WriteString("  private readonly axios: AxiosInstance;\n\n")
-	b.WriteString("  constructor(baseURL: string = '%s') {\n", baseURL))
+	b.WriteString(fmt.Sprintf("  constructor(baseURL: string = '%s') {\n", baseURL))
 	b.WriteString("    this.baseUrl = baseURL;\n")
 	b.WriteString("    this.axios = axios.create({\n")
 	b.WriteString(fmt.Sprintf("      baseURL: baseURL,\n"))
@@ -216,13 +214,12 @@ func (p *TypeScriptPlugin) generateGatewayClient(config generators.GenConfig, pa
 
 			// Determine HTTP method based on naming convention
 			httpMethod := "POST"
-			path := fmt.Sprintf("/%s/%s/%s", parsed.Package, svc.Name, method.Name)
 			if strings.HasPrefix(method.Name, "get") || method.Name == "ping" || method.Name == "exists" {
 				httpMethod = "GET"
 			}
 
-			b.WriteString(fmt.Sprintf("    const %s = await this.axios.httpMethod(path, { params, data });\n",
-				method.Name, httpMethod, path))
+			b.WriteString(fmt.Sprintf("    const %s = await this.%s.%s(%q, { params, data });\n",
+				method.Name, strings.ToLower(httpMethod), method.Name, "/"+parsed.Package+"/"+svc.Name+"/"+method.Name))
 			b.WriteString(fmt.Sprintf("    return response.data as %sResponse;\n", method.OutputType))
 			b.WriteString("  }\n\n")
 		}
@@ -278,11 +275,6 @@ func (p *TypeScriptPlugin) generateReactHook(config generators.GenConfig, parsed
 		}
 	}
 	b.WriteString("}\n\n")
-
-	gatewayImport := "restClient"
-	if !useGateway {
-		gatewayImport = "client"
-	}
 
 	b.WriteString(fmt.Sprintf("export function %s(baseURL: string = '%s'): %sHook {\n", hookName, "localhost:8081", hookName))
 	if useGateway {

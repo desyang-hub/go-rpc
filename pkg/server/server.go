@@ -29,6 +29,7 @@ import (
 )
 
 // BuildOption is a functional option for configuring the gRPC server.
+// It applies post-build modifications (e.g. middleware registration).
 type BuildOption func(*grpc.Server)
 
 // ServiceInfo contains information about a registered service instance.
@@ -213,14 +214,19 @@ func (s *Server) Build() error {
 		}),
 	}
 
-	if s.config.MaxConnectionIdle > 0 {
-		opts = append(opts, grpc.MaxConnectionIdle(s.config.MaxConnectionIdle))
-	}
-	if s.config.MaxConnectionAge > 0 {
-		opts = append(opts, grpc.MaxConnectionAge(s.config.MaxConnectionAge))
-	}
-	if s.config.MaxConnectionAgeGrace > 0 {
-		opts = append(opts, grpc.MaxConnectionAgeGrace(s.config.MaxConnectionAgeGrace))
+
+	if s.config.MaxConnectionIdle > 0 || s.config.MaxConnectionAge > 0 || s.config.MaxConnectionAgeGrace > 0 {
+		params := grpckeepalive.ServerParameters{}
+		if s.config.MaxConnectionIdle > 0 {
+			params.MaxConnectionIdle = s.config.MaxConnectionIdle
+		}
+		if s.config.MaxConnectionAge > 0 {
+			params.MaxConnectionAge = s.config.MaxConnectionAge
+		}
+		if s.config.MaxConnectionAgeGrace > 0 {
+			params.MaxConnectionAgeGrace = s.config.MaxConnectionAgeGrace
+		}
+		opts = append(opts, grpc.KeepaliveParams(params))
 	}
 
 	// Handle TLS via credentials
@@ -241,12 +247,14 @@ func (s *Server) Build() error {
 		})))
 	}
 
-	// Apply build options (middlewares)
-	for _, m := range s.config.BuildOptions {
-		opts = append(opts, m)
-	}
-
 	s.grpcServer = grpc.NewServer(opts...)
+
+	// Apply build options (post-build callbacks, e.g. middleware registration).
+	for _, m := range s.config.BuildOptions {
+		if m != nil {
+			m(s.grpcServer)
+		}
+	}
 	return nil
 }
 

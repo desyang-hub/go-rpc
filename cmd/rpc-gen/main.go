@@ -54,9 +54,9 @@ func generateCmd() *cobra.Command {
 
 			// Create plugin registry and register plugins
 			registry := generators.NewPluginRegistry()
-			registry.AttachPlugin(go_generator.NewGoPlugin())
-			registry.AttachPlugin(python.NewPlugin())
-			registry.AttachPlugin(typescript.NewPlugin())
+			registry.Register(go_generator.NewGoPlugin())
+			registry.Register(python_generator.NewPythonPlugin())
+			registry.Register(typescript_generator.NewTypeScriptPlugin())
 
 			// Get the plugin
 			plugin, err := registry.Get(lang)
@@ -89,11 +89,7 @@ func generateCmd() *cobra.Command {
 			// Print summary
 			fmt.Printf("Generated %d file(s):\n", len(files))
 			for _, f := range files {
-				e := "OK"
-				if f.Error != nil {
-					e = fmt.Sprintf("ERROR: %v", f.Error)
-				}
-				fmt.Printf("  %s (%s%s)\n", f.Path, f.Description, e)
+				fmt.Printf("  %s (%s)\n", f.Path, f.Description)
 			}
 
 			return nil

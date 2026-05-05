@@ -16,6 +16,7 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
+	grpckeepalive "google.golang.org/grpc/keepalive"
 
 	"github.com/desyang-hub/go-rpc/internal/loadbalancer"
 )
@@ -155,7 +156,7 @@ func (p *ConnectionPool) GetInstance(addr string) (*grpc.ClientConn, error) {
 
 func (p *ConnectionPool) createConnection(addr string) error {
 	opts := []grpc.DialOption{
-		grpc.WithKeepaliveParams(grpc.KeepaliveParams{
+		grpc.WithKeepaliveParams(grpckeepalive.ClientParameters{
 			Time:                p.config.KeepalivePeriod,
 			Timeout:             p.config.KeepaliveTimeout,
 			PermitWithoutStream: true,

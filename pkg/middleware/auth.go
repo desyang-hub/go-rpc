@@ -27,7 +27,6 @@ package middleware
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -187,7 +186,7 @@ func (v *JWTValidator) Interceptor() grpc.UnaryServerInterceptor {
 		claims, err := v.Validate(tokenReq.Token)
 		if err != nil {
 			s, _ := status.FromError(err)
-			return nil, s
+			return nil, s.Err()
 		}
 
 		// Store claims in context for downstream use
@@ -234,7 +233,7 @@ func AuthInterceptor(validator TokenValidator) grpc.UnaryServerInterceptor {
 		claims, err := validator.Validate(token)
 		if err != nil {
 			s, _ := status.FromError(err)
-			return nil, s
+			return nil, s.Err()
 		}
 
 		interceptedContext := context.WithValue(ctx, "auth-claims", claims)

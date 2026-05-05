@@ -66,7 +66,7 @@ func (r *ConsulRegistry) Register(ctx context.Context, service ServiceInfo) erro
 		Port:    port,
 		Tags:    r.addMetadataTags(r.config.ServiceTags, service.Metadata),
 		Check: &consulAPI.AgentServiceCheck{
-			ID:                       checkID,
+			CheckID:                    checkID,
 			TTL:                      toTTLString(r.config.UnhealthyAfter),
 			Status:                   string(consulAPI.HealthPassing),
 			DeregisterCriticalServiceAfter: toTTLString(r.config.UnhealthyAfter * 2),
@@ -135,7 +135,7 @@ func (r *ConsulRegistry) Watch(ctx context.Context) (<-chan ServiceUpdate, error
 
 			entries, meta, err := r.client.Catalog().Service(r.config.ServiceName, "", &consulAPI.QueryOptions{
 				WaitTime: time.Second * 30,
-				Index:    lastIndex,
+				WaitIndex: lastIndex,
 			})
 
 			if err != nil {
@@ -151,8 +151,8 @@ func (r *ConsulRegistry) Watch(ctx context.Context) (<-chan ServiceUpdate, error
 			for _, entry := range entries {
 				serviceUpdates <- ServiceUpdate{
 					Service: ServiceInfo{
-						Name: entry.Service.Service,
-						Addr: fmt.Sprintf("%s:%d", entry.Service.Address, entry.Service.Port),
+						Name:  entry.ServiceName,
+						Addr: fmt.Sprintf("%s:%d", entry.ServiceAddress, entry.ServicePort),
 						Healthy: true,
 					},
 					Type: UpdateTypeRegister,

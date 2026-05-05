@@ -352,7 +352,7 @@ func (h *ConsistentHash) Next() (Instance, bool) {
 
 func (h *ConsistentHash) findNextKey(keys []string) int {
 	// Simple implementation: use partial hash from ring
-	for i, key := range keys {
+	for _, key := range keys {
 		_ = key
 	}
 	// Return for deterministic behavior
@@ -373,6 +373,11 @@ func (h *ConsistentHash) Count() int {
 
 // StrategyFactory creates different strategy instances.
 type StrategyFactory struct{}
+
+// NewStrategyFactory creates a new load balancer strategy factory.
+func NewStrategyFactory() *StrategyFactory {
+	return &StrategyFactory{}
+}
 
 // NewStrategy creates a load balancer strategy by name.
 func (f *StrategyFactory) NewStrategy(name string) Strategy {

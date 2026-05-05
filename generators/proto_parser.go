@@ -158,16 +158,16 @@ func (p *Parser) parseDescriptorSet(descSetPath, protoPath string) (*ProtoFile, 
 		return nil, fmt.Errorf("failed to read descriptor set: %w", err)
 	}
 
-	// Parse TypeInfoSet (binary format)
-	var tds descriptorpb.TypeInfoSet
-	if err := proto.Unmarshal(data, &tds); err != nil {
+	// Parse FileDescriptorSet (binary format)
+	fds := new(descriptorpb.FileDescriptorSet)
+	if err := proto.Unmarshal(data, fds); err != nil {
 		return nil, fmt.Errorf("failed to parse descriptor set: %w", err)
 	}
 
 	// Extract the proto file (first one in the set)
 	// Note: This is simplified - production should properly handle imports
 	var fileDesc *descriptorpb.FileDescriptorProto
-	for _, fd := range tds.FileDescriptorProto {
+	for _, fd := range fds.File {
 		// Match based on filename
 		if strings.HasSuffix(fd.GetName(), filepath.Base(protoPath)) {
 			fileDesc = fd
@@ -195,87 +195,72 @@ func (p *Parser) parseDescriptorSet(descSetPath, protoPath string) (*ProtoFile, 
 		pf.Options["go_package"] = goPkg
 	}
 
-	// Parse enums
-	for enumDesc := range tds.EnumDescriptor {
-		if enumDesc.File != nil && enumDesc.File == fileDesc {
-			enum := Enum{
-				Name:   enumDesc.GetName(),
-				Values: make([]EnumValue, len(enumDesc.Value)),
-			}
-			for i, v := range enumDesc.Value {
-				enum.Values[i] = EnumValue{
-					Name:   v.GetName(),
-					Number: v.GetNumber(),
-				}
-			}
-			pf.Enums = append(pf.Enums, enum)
+	// Parse messages
+	for _, msgDesc := range fileDesc.MessageType {
+		msg := Message{
+			Name:   msgDesc.GetName(),
+			Fields: make([]Field, len(msgDesc.Field)),
 		}
+		for i, fieldDesc := range msgDesc.Field {
+			msg.Fields[i] = parseField(fieldDesc)
+		}
+		pf.Messages = append(pf.Messages, msg)
 	}
 
-	// Parse messages
-	for msgDesc := range tds.MessageDescriptor {
-		if msgDesc.File != nil && msgDesc.File == fileDesc {
-			msg := Message{
-				Name:   msgDesc.GetName(),
-				Fields: make([]Field, len(msgDesc.Field)),
-			}
-			for i, fieldDesc := range msgDesc.Field {
-				msg.Fields[i] = parseField(fileDesc, fieldDesc)
-			}
-			pf.Messages = append(pf.Messages, msg)
+	// Parse enums
+	for _, enumDesc := range fileDesc.EnumType {
+		enum := Enum{
+			Name:   enumDesc.GetName(),
+			Values: make([]EnumValue, len(enumDesc.Value)),
 		}
+		for i, v := range enumDesc.Value {
+			enum.Values[i] = EnumValue{
+				Name:   v.GetName(),
+				Number: v.GetNumber(),
+			}
+		}
+		pf.Enums = append(pf.Enums, enum)
 	}
 
 	// Parse services
-	for svcDesc := range tds.ServiceDescriptor {
-		if svcDesc.File != nil && svcDesc.File == fileDesc {
-			svc := Service{
-				Name:    svcDesc.GetName(),
-				Methods: make([]ServiceMethod, len(svcDesc.Method)),
-			}
-			for i, methodDesc := range svcDesc.Method {
-				msgType := DataTypeUnary
-				if methodDesc.GetClientStreaming() {
-					msgType = DataTypeClientStream
-					if methodDesc.GetServerStreaming() {
-						msgType = DataTypeBidirectional
-					}
-				} else if methodDesc.GetServerStreaming() {
-					msgType = DataTypeServerStream
-				}
-
-				svc.Methods[i] = ServiceMethod{
-					Name:         methodDesc.GetName(),
-					InputType:    methodDesc.GetInputType(),
-					OutputType:   methodDesc.GetOutputType(),
-					ClientStream: methodDesc.GetClientStreaming(),
-					ServerStream: methodDesc.GetServerStreaming(),
-				}
-			}
-			pf.Services = append(pf.Services, svc)
+	for _, svcDesc := range fileDesc.Service {
+		svc := Service{
+			Name:    svcDesc.GetName(),
+			Methods: make([]ServiceMethod, len(svcDesc.Method)),
 		}
+		for i, methodDesc := range svcDesc.Method {
+			svc.Methods[i] = ServiceMethod{
+				Name:         methodDesc.GetName(),
+				InputType:    methodDesc.GetInputType(),
+				OutputType:   methodDesc.GetOutputType(),
+				ClientStream: methodDesc.GetClientStreaming(),
+				ServerStream: methodDesc.GetServerStreaming(),
+			}
+		}
+		pf.Services = append(pf.Services, svc)
 	}
 
 	return pf, nil
 }
 
-func parseField(fileDesc *descriptorpb.FileDescriptorProto, field *descriptorpb.FieldDescriptorProto) Field {
+func parseField(field *descriptorpb.FieldDescriptorProto) Field {
 	f := Field{
-		Name:        field.GetName(),
-		Type:        convertProtoTypeToGoType(fileDesc, field),
-		TypeName:    field.TypeName.String(),
-		Number:      field.GetNumber(),
-		Mapped:      field.GetType().IsMapType(),
+		Name:     field.GetName(),
+		Type:     convertProtoTypeToGoType(field),
+		TypeName: field.GetTypeName(),
+		Number:   field.GetNumber(),
+		Mapped:   strings.Contains(field.GetTypeName(), "MapEntry"),
 	}
 
-	if field.IsMapKey() {
-		f.KeyType = convertProtoTypeToGoType(fileDesc, field.KeyType)
-	}
-	if field.IsMapValueType() {
-		f.ValueType = convertProtoTypeToGoType(fileDesc, field.ValueType)
+	// Handle map field types - simplified detection for v2.x
+	if f.Mapped {
+		// Map fields in proto3 have their type name containing "MapEntry"
+		// We skip detailed field parsing since FieldDescriptorProto doesn't expose nested types in v2.x
+		f.KeyType = "unknown"
+		f.ValueType = "unknown"
 	}
 
-	f.Repeated = field.Label().IsRepeated()
+	f.Repeated = field.GetLabel() == descriptorpb.FieldDescriptorProto_LABEL_REPEATED
 	if field.Options != nil && field.Options.GetWeak() {
 		f.Optional = true
 	}
@@ -284,7 +269,7 @@ func parseField(fileDesc *descriptorpb.FileDescriptorProto, field *descriptorpb.
 }
 
 // convertProtoTypeToGoType converts protobuf field type to Go type string.
-func convertProtoTypeToGoType(fileDesc *descriptorpb.FileDescriptorProto, field *descriptorpb.FieldDescriptorProto) string {
+func convertProtoTypeToGoType(field *descriptorpb.FieldDescriptorProto) string {
 	t := field.GetType()
 	switch t {
 	case descriptorpb.FieldDescriptorProto_TYPE_DOUBLE:
@@ -318,9 +303,10 @@ func convertProtoTypeToGoType(fileDesc *descriptorpb.FileDescriptorProto, field 
 	case descriptorpb.FieldDescriptorProto_TYPE_BYTES:
 		return "bytes"
 	default:
-		return field.TypeName.String()
+		return field.GetTypeName()
 	}
 }
+
 // Timestamp returns the file modification time as an RFC3339 string, or current time if unavailable.
 func (pf *ProtoFile) Timestamp() string {
 	return time.Now().Format(time.RFC3339)

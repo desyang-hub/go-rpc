@@ -23,7 +23,6 @@ import (
 	"github.com/desyang-hub/go-rpc/pkg/server"
 	pb "github.com/desyang-hub/go-rpc/api/genapi"
 	"github.com/desyang-hub/go-rpc/internal/observability"
-	"github.com/desyang-hub/go-rpc/internal/healthcheck"
 )
 
 const (
@@ -148,7 +147,6 @@ func main() {
 
 	// Observability
 	op := observability.NewMetrics()
-	hc := healthcheck.New(nil, healthcheck.DefaultConfig())
 
 	// HTTP endpoints
 	mux := http.NewServeMux()

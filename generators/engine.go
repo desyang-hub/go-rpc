@@ -50,7 +50,7 @@ func (c EngineConfig) withDefaults() EngineConfig {
 		c.OutputType = OutputPerService
 	}
 	if c.Now.IsZero() {
-		c.now = time.Now()
+		c.Now = time.Now()
 	}
 	return c
 }

@@ -236,11 +236,11 @@ func (rl *RateLimiter) allow(ctx context.Context, method string) bool {
 	return false
 }
 
-// report returns the reported rate limit error
-func (rl *RateLimiter) report(ctx context.Context, method string) {
-	status.New(codes.ResourceExhausted,
+// report returns a rate limit error
+func (rl *RateLimiter) report(ctx context.Context, method string) error {
+	return status.Error(codes.ResourceExhausted,
 		fmt.Sprintf("rate limit exceeded: method=%s (limit=%.0f req/s, burst=%d)",
-			method, rl.config.RequestsPerSecond, rl.config.BurstSize)).Send()
+			method, rl.config.RequestsPerSecond, rl.config.BurstSize))
 }
 
 // Interceptor returns a unary server interceptor for rate limiting.

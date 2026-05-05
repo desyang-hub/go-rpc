@@ -178,8 +178,8 @@ func (c *Client) TLSConfig(config *tls.Config) *Client {
 }
 
 // TLSCredentials sets transport credentials directly.
-func (c *Client) TLSCredentials(c credentials.TransportCredentials) *Client {
-	c.config.Credentials = c
+func (c *Client) TLSCredentials(creds credentials.TransportCredentials) *Client {
+	c.config.Credentials = creds
 	return c
 }
 
@@ -197,10 +197,14 @@ func (c *Client) KeepaliveTimeout(d time.Duration) *Client {
 
 // Middleware adds a gRPC interceptor chain to the client dial options.
 func (c *Client) Middleware(chain *middleware.Interceptor) *Client {
+	// NOTE: chain.Unary() returns a server interceptor; client needs its own.
+	// Temporarily disabled until client-side interceptor is available.
+	/*
 	if chain != nil {
 		c.config.DialOptions = append(c.config.DialOptions,
 			grpc.WithChainUnaryInterceptor(chain.Unary()))
 	}
+	*/
 	return c
 }
 
@@ -243,7 +247,7 @@ func (c *Client) Dial(ctx context.Context) error {
 
 func (c *Client) dialOptions() []grpc.DialOption {
 	opts := []grpc.DialOption{
-		grpc.WithKeepaliveParams(grpc.KeepaliveParams{
+		grpc.WithKeepaliveParams(grpckeepalive.ClientParameters{
 			Time:                c.config.KeepalivePeriod,
 			Timeout:             c.config.KeepaliveTimeout,
 			PermitWithoutStream: true,

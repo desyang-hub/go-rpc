@@ -19,7 +19,6 @@ import (
 
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
@@ -32,7 +31,7 @@ type LoggerImpl interface {
 	Info(msg string, fields ...interface{})
 	Warn(msg string, fields ...interface{})
 	Error(msg string, fields ...interface{})
-	With(Tuple ...interface{}) *LoggerImpl
+	With(Tuple ...interface{}) LoggerImpl
 }
 
 // zerologAdapter adapts zerolog.Logger to LoggerImpl interface.
@@ -72,7 +71,7 @@ func (a *zerologAdapter) Error(msg string, fields ...interface{}) {
 	}
 }
 
-func (a *zerologAdapter) With(Tuple ...interface{}) *LoggerImpl {
+func (a *zerologAdapter) With(Tuple ...interface{}) LoggerImpl {
 	return a
 }
 
@@ -171,6 +170,7 @@ func NewLoggingInterceptor(logger zerolog.Logger) *Interceptor {
 			Str("request_id", requestId).
 			Dur("duration_ms", duration).
 			Str("status", statusCode).
+			Str("user_agent", userAgent).
 			Msg("grpc_request")
 
 		if err != nil {

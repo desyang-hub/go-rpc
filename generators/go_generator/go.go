@@ -4,7 +4,6 @@ package go_generator
 import (
 	"fmt"
 	"path/filepath"
-	"strings"
 
 	"github.com/desyang-hub/go-rpc/generators"
 )

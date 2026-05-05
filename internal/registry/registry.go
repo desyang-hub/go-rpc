@@ -23,6 +23,7 @@ package registry
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 )
 
@@ -33,6 +34,12 @@ type ServiceInfo struct {
 	Metadata map[string]string
 	TTL      time.Duration
 	Healthy  bool
+}
+
+// ToJSON serializes ServiceInfo to JSON.
+func (s ServiceInfo) ToJSON() string {
+	data, _ := json.Marshal(s)
+	return string(data)
 }
 
 // Registry provides service registration and discovery.

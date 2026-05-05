@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
@@ -66,11 +65,11 @@ func ClientInterceptor(m *Metrics, t *Tracer, l *Logger, serviceName string, ser
 	return func(ctx context.Context, method string, server any, reply any, cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
 		attrs := t.SetClientSpanAttributes(serviceName, method, serverAddr)
 
-		spanCtx, span := t.StartSpanWithAttributes(ctx, method, attrs...)
+		spanCtx, span := t.SpanWithAttributes(ctx, method, attrs...)
 		_ = spanCtx
 
 		startTime := time.Now()
-		err := invoker(ctx, method, server, reply, opts...)
+		err := invoker(ctx, method, server, reply, cc, opts...)
 		duration := time.Since(startTime)
 
 		code := "unknown"

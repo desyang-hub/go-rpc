@@ -77,7 +77,7 @@ func TestWeightedRoundRobin(t *testing.T) {
 	mu.Unlock()
 
 	// With weights 3:1, we expect roughly 6:2 ratio over 8 iterations
-	if c1 < c2*1.2 {
+	if c1 < int(float64(c2)*1.2) {
 		t.Errorf("Expected weighted distribution with more hits to higher weight, got %d vs %d", c1, c2)
 	}
 }
