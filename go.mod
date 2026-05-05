@@ -1,6 +1,6 @@
 module github.com/desyang/go-rpc
 
-go 1.22
+go 1.21
 
 require (
 	google.golang.org/grpc v1.65.0
