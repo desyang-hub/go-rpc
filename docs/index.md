@@ -1,36 +1,62 @@
-# go-rpc Documentation
-
-Enterprise-grade cross-language RPC framework built for production environments.
-
-## Overview
-
-go-rpc is a high-performance RPC framework based on gRPC and Protocol Buffers, designed for building distributed systems with first-class support for multiple programming languages.
+---
+layout: home
+title: go-rpc Documentation
+hero:
+  name: go-rpc
+  text: Enterprise RPC Framework
+  tagline: Cross-language RPC framework built for production environments.
+  image:
+    src: /logo.svg
+    alt: go-rpc logo
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /getting-started/quick-start/
+    - theme: alt
+      text: Architecture
+      link: /architecture/overview/
+    - theme: alt
+      text: Find on GitHub
+      link: https://github.com/desyang/go-rpc
+---
 
 ## Key Features
 
-| Feature | Description |
-|---------|-------------|
-| **gRPC Standard** | Based on Protocol Buffers and HTTP/2, supporting all four call modes |
-| **Service Discovery** | Consul and etcd backends, switchable via configuration |
-| **Load Balancing** | Round-robin, weighted round-robin, least connections, consistent hashing |
-| **Circuit Breaker** | Google SRE algorithm with custom degradation logic |
-| **Observability** | OpenTelemetry tracing + Prometheus metrics |
-| **Cross-Language** | Auto-generate Python/TypeScript client code via `rpc-gen` |
-| **Pluggable Architecture** | Interceptors, discovery backends, and load balancers are all swappable |
-
-## Architecture
-
-![Architecture](assets/architecture.png)
-
-See the [Architecture Overview](architecture/overview.md) for detailed design and component interactions.
-
-## Quick Links
-
-- **Getting Started**: [Quick Start](getting-started/quick-start.md) · [Installation](getting-started/installation.md)
-- **Guides**: [Service Registration](guides/service-registration.md) · [Observability](guides/observability.md)
-- **Cross-Language**: [Python Client](cross-language/python.md) · [TypeScript Client](cross-language/typescript.md)
-- **API Reference**: [Go Server](api/go-server.md) · [rpc-gen CLI](api/rpc-gen.md)
-
-## Repository
-
-[GitHub](https://github.com/desyang/go-rpc)
+<table>
+  <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>gRPC Standard</strong></td>
+      <td>Based on Protocol Buffers and HTTP/2, supporting all four call modes</td>
+    </tr>
+    <tr>
+      <td><strong>Service Discovery</strong></td>
+      <td>Consul and etcd backends, switchable via configuration</td>
+    </tr>
+    <tr>
+      <td><strong>Load Balancing</strong></td>
+      <td>Round-robin, weighted round-robin, least connections, consistent hashing</td>
+    </tr>
+    <tr>
+      <td><strong>Circuit Breaker</strong></td>
+      <td>Google SRE algorithm with custom degradation logic</td>
+    </tr>
+    <tr>
+      <td><strong>Observability</strong></td>
+      <td>OpenTelemetry tracing + Prometheus metrics</td>
+    </tr>
+    <tr>
+      <td><strong>Cross-Language</strong></td>
+      <td>Auto-generate Python/TypeScript client code via `rpc-gen`</td>
+    </tr>
+    <tr>
+      <td><strong>Pluggable Architecture</strong></td>
+      <td>Interceptors, discovery backends, and load balancers are all swappable</td>
+    </tr>
+  </tbody>
+</table>
