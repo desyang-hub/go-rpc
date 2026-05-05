@@ -222,6 +222,18 @@ func (l *LeastConnection) Next() (Instance, bool) {
 	return selected, true
 }
 
+// SetConnects updates the connection count for an instance by address.
+func (l *LeastConnection) SetConnects(addr string, count int64) {
+	l.mu.Lock()
+	defer l.mu.Unlock()
+	for i, inst := range l.instances {
+		if inst.Addr == addr {
+			l.instances[i].Connects = count
+			return
+		}
+	}
+}
+
 func (l *LeastConnection) Instances() []Instance {
 	l.mu.RLock()
 	defer l.mu.RUnlock()

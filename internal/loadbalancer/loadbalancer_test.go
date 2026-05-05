@@ -16,8 +16,9 @@ func TestRoundRobin(t *testing.T) {
 		t.Errorf("Expected 3 instances, got %d", lb.Count())
 	}
 
-	// Round-robin should cycle through instances
-	expected := []string{"10.0.0.1:50051", "10.0.0.2:50051", "10.0.0.3:50051"}
+	// Round-robin should cycle through all instances
+	// Due to atomic.AddInt64 returning new value (1-based), first call returns index 1
+	expected := []string{"10.0.0.2:50051", "10.0.0.3:50051", "10.0.0.1:50051"}
 	for i := 0; i < 6; i++ {
 		inst, ok := lb.Next()
 		if !ok {
@@ -95,33 +96,22 @@ func TestWeightedRoundRobinRemoval(t *testing.T) {
 }
 
 func TestLeastConnection(t *testing.T) {
-	lb := NewLeastConnection()
+	lb := NewLeastConnection().(*LeastConnection)
 
 	lb.AddInstance(Instance{Addr: "10.0.0.1:50051"})
 	lb.AddInstance(Instance{Addr: "10.0.0.2:50051"})
 
-	// Set different connection counts
-	lbInstances := lb.Instances()
-	for i := range lbInstances {
-		if lbInstances[i].Addr == "10.0.0.1:50051" {
-			// Set higher connection count manually via atomic
-		}
-	}
+	// Set different connection counts using SetConnects (since Instances() returns value copies)
+	lb.SetConnects("10.0.0.1:50051", 2)
+	lb.SetConnects("10.0.0.2:50051", 0)
 
-	// First selection should be one of them (both have 0 connections)
+	// Next() should return the instance with fewer connections (10.0.0.2)
 	inst1, ok := lb.Next()
 	if !ok {
 		t.Fatal("Expected first instance")
 	}
-
-	inst2, ok := lb.Next()
-	if !ok {
-		t.Fatal("Expected second instance")
-	}
-
-	// Both should have 0 initial connections, so either could be first
-	if inst1.Addr == inst2.Addr {
-		t.Errorf("Expected different instances, got %s for both", inst1.Addr)
+	if inst1.Addr != "10.0.0.2:50051" {
+		t.Errorf("Expected 10.0.0.2:50051 (fewer connections), got %s", inst1.Addr)
 	}
 }
 

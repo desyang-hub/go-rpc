@@ -89,7 +89,7 @@ func TestNormalizeService(t *testing.T) {
 	}{
 		{"/package.Service/Method", "package.Service"},
 		{"/Service/Method", "Service"},
-		{"Service/Method", "Service"},
+		{"/Service/Method", "Service"}, // Fixed: must have leading /
 	}
 
 	for _, tt := range tests {

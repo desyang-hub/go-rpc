@@ -160,15 +160,20 @@ func ToCamelCase(s string) string {
 }
 
 // ToSnakeCase converts a string to snake_case.
-// "helloWorld" -> "hello_world", "HelloWorld" -> "hello_world"
+// "helloWorld" -> "hello_world", "XMLParser" -> "xml_parser", "HTTPServer" -> "http_server"
 func ToSnakeCase(s string) string {
 	result := make([]rune, 0, len(s)+1)
 	for i, r := range s {
-		if r >= 'A' && r <= 'Z' {
+		if r == ' ' || r == '-' {
+			// Replace space and hyphen with underscore
+			result = append(result, '_')
+		} else if r >= 'A' && r <= 'Z' {
 			if i > 0 {
 				prev := rune(s[i-1])
-				// Don't add underscore before a capital letter if previous is also capital
-				if !(prev >= 'A' && prev <= 'Z') {
+				// Add underscore before uppercase if:
+				// 1. Previous char is lowercase (e.g., "l" -> "W" in "helloWorld")
+				// 2. Current is uppercase AND next is lowercase (e.g., "XMLP" in "XMLParser")
+				if (prev >= 'a' && prev <= 'z') || (prev >= 'A' && prev <= 'Z' && i+1 < len(s) && unicode.IsLower(rune(s[i+1]))) {
 					result = append(result, '_')
 				}
 			}
@@ -183,10 +188,29 @@ func ToSnakeCase(s string) string {
 // ToPascalCase converts a string to PascalCase.
 // "hello_world" -> "HelloWorld", "helloWorld" -> "HelloWorld"
 func ToPascalCase(s string) string {
-	// Split by non-alphanumeric characters
-	words := strings.FieldsFunc(s, func(r rune) bool {
-		return r == '_' || r == '-' || r == ' '
-	})
+	// First normalize separators to spaces for uniform handling
+	s = strings.ReplaceAll(s, "_", " ")
+	s = strings.ReplaceAll(s, "-", " ")
+
+	// Split by spaces/another separators
+	words := strings.Fields(s)
+
+	// If there's only one word and it looks like camelCase, split it
+	if len(words) == 1 && strings.ContainsAny(words[0], "abcdefghijklmnopqrstuvwxyz") {
+		word := words[0]
+		var split []string
+		for i, r := range word {
+			if i > 0 && r >= 'A' && r <= 'Z' {
+				// Split before uppercase letter
+				split = append(split, word[:i])
+				word = word[i:]
+				i = 0
+			}
+		}
+		split = append(split, word)
+		words = split
+	}
+
 	result := make([]string, len(words))
 	for i, w := range words {
 		if len(w) > 0 {
