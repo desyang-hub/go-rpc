@@ -1,7 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'go-rpc Documentation',
+  title: 'Go-RPC Documentation',
   description: 'Enterprise-grade cross-language RPC framework documentation',
 
   base: '/go-rpc/',
@@ -19,11 +19,11 @@ export default defineConfig({
     logo: '/logo.svg',
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Getting Started', link: '/getting-started/' },
-      { text: 'Architecture', link: '/architecture/' },
-      { text: 'Guides', link: '/guides/' },
-      { text: 'API Reference', link: '/api/' },
-      { text: 'Deployment', link: '/deployment/' },
+      { text: 'Getting Started', link: '/getting-started/quick-start.html', activeMatch: '^/getting-started/' },
+      { text: 'Architecture', link: '/architecture/overview.html', activeMatch: '^/architecture/' },
+      { text: 'Guides', link: '/guides/service-registration.html', activeMatch: '^/guides/' },
+      { text: 'API Reference', link: '/api/go-server.html', activeMatch: '^/api/' },
+      { text: 'Deployment', link: '/deployment/docker.html', activeMatch: '^/deployment/' },
     ],
 
     sidebar: {
@@ -32,54 +32,54 @@ export default defineConfig({
           text: 'Getting Started',
           collapsed: true,
           items: [
-            { text: 'Quick Start', link: '/getting-started/quick-start/' },
-            { text: 'Installation', link: '/getting-started/installation/' },
-            { text: 'Basic Usage', link: '/getting-started/basic-usage/' },
+            { text: 'Quick Start', link: '/getting-started/quick-start.html' },
+            { text: 'Installation', link: '/getting-started/installation.html' },
+            { text: 'Basic Usage', link: '/getting-started/basic-usage.html' },
           ],
         },
         {
           text: 'Architecture',
           collapsed: true,
           items: [
-            { text: 'Overview', link: '/architecture/overview/' },
-            { text: 'Core Components', link: '/architecture/core-components/' },
-            { text: 'Service Discovery', link: '/architecture/service-discovery/' },
-            { text: 'Load Balancing', link: '/architecture/load-balancing/' },
-            { text: 'Circuit Breaker', link: '/architecture/circuit-breaker/' },
+            { text: 'Overview', link: '/architecture/overview.html' },
+            { text: 'Core Components', link: '/architecture/core-components.html' },
+            { text: 'Service Discovery', link: '/architecture/service-discovery.html' },
+            { text: 'Load Balancing', link: '/architecture/load-balancing.html' },
+            { text: 'Circuit Breaker', link: '/architecture/circuit-breaker.html' },
           ],
         },
         {
           text: 'Guides',
           collapsed: true,
           items: [
-            { text: 'Service Registration', link: '/guides/service-registration/' },
-            { text: 'Load Balancing Setup', link: '/guides/load-balancing/' },
-            { text: 'Observability', link: '/guides/observability/' },
-            { text: 'Authentication', link: '/guides/authentication/' },
-            { text: 'Rate Limiting', link: '/guides/rate-limiting/' },
+            { text: 'Service Registration', link: '/guides/service-registration.html' },
+            { text: 'Load Balancing Setup', link: '/guides/load-balancing.html' },
+            { text: 'Observability', link: '/guides/observability.html' },
+            { text: 'Authentication', link: '/guides/authentication.html' },
+            { text: 'Rate Limiting', link: '/guides/rate-limiting.html' },
           ],
         },
         {
           text: 'API Reference',
           collapsed: true,
           items: [
-            { text: 'Go Server', link: '/api/go-server/' },
-            { text: 'Go Client', link: '/api/go-client/' },
-            { text: 'rpc-gen CLI', link: '/api/rpc-gen/' },
+            { text: 'Go Server', link: '/api/go-server.html' },
+            { text: 'Go Client', link: '/api/go-client.html' },
+            { text: 'rpc-gen CLI', link: '/api/rpc-gen.html' },
           ],
         },
         {
           text: 'Deployment',
           collapsed: true,
           items: [
-            { text: 'Docker Deployment', link: '/deployment/docker/' },
-            { text: 'Kubernetes', link: '/deployment/kubernetes/' },
+            { text: 'Docker Deployment', link: '/deployment/docker.html' },
+            { text: 'Kubernetes', link: '/deployment/kubernetes.html' },
           ],
         },
         {
           text: 'Contributing',
           items: [
-            { text: 'Contributing Guide', link: '/contributing/' },
+            { text: 'Contributing Guide', link: '/contributing.html' },
           ],
         },
       ],
@@ -97,7 +97,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2025-present desyang-hub',
+      copyright: 'Copyright © 2026-present desyang-hub',
     },
   },
 

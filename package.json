@@ -2,7 +2,7 @@
   "name": "go-rpc-docs",
   "private": true,
   "version": "1.0.0",
-  "description": "go-rpc documentation site",
+  "description": "Go-RPC documentation site",
   "scripts": {
     "docs:dev": "cd docs && npx vitepress dev",
     "docs:build": "cd docs && npx vitepress build",

@@ -1,8 +1,8 @@
 ---
 layout: home
-title: go-rpc Documentation
+title: Go-RPC Documentation
 hero:
-  name: go-rpc
+  name: Go-RPC
   text: Enterprise RPC Framework
   tagline: Cross-language RPC framework built for production environments.
   image:
