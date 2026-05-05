@@ -7,7 +7,7 @@ hero:
   tagline: Cross-language RPC framework built for production environments.
   image:
     src: /logo.svg
-    alt: go-rpc logo
+    alt: Go-RPC logo
   actions:
     - theme: brand
       text: Get Started
