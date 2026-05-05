@@ -6,17 +6,17 @@ export default defineConfig({
 
   base: '/go-rpc/',
   lang: 'en-US',
-  cleanUrls: true,
+  cleanUrls: false,
   ignoreDeadLinks: true,
 
   outDir: '.vitepress/dist',
 
   head: [
-    ['link', { rel: 'icon', href: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Go-Logo.svg/200px-Go-Logo.svg.png', type: 'image/png' }],
+    ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
   ],
 
   themeConfig: {
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Go-Logo.svg/200px-Go-Logo.svg.png',
+    logo: '/logo.svg',
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Getting Started', link: '/getting-started/' },
@@ -87,17 +87,17 @@ export default defineConfig({
 
     lastUpdated: true,
     editLink: {
-      pattern: 'https://github.com/desyang/go-rpc/edit/master/docs/:path',
+      pattern: 'https://github.com/desyang-hub/go-rpc/edit/main/docs/:path',
       text: 'Edit this page on GitHub',
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/desyang/go-rpc' },
+      { icon: 'github', link: 'https://github.com/desyang-hub/go-rpc' },
     ],
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2025-present desyang',
+      copyright: 'Copyright © 2025-present desyang-hub',
     },
   },
 
