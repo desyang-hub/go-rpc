@@ -34,6 +34,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+      - name: Sync module dependencies
+        run: |
+          go mod tidy
+          go mod download
       - name: Run tests
         run: |
           go test -race -coverprofile=coverage.out -covermode=atomic ./...
@@ -85,6 +89,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+      - name: Sync module dependencies
+        if: matrix.type == 'go'
+        run: go mod tidy && go mod download
       - name: Check build
         run: |
           cd ${{ matrix.path }}
