@@ -1,9 +1,4 @@
 import { defineConfig } from 'vitepress'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
 
 export default defineConfig({
   title: 'go-rpc Documentation',
@@ -11,28 +6,24 @@ export default defineConfig({
 
   base: '/go-rpc/',
   lang: 'en-US',
+  cleanUrls: true,
+  ignoreDeadLinks: true,
 
   outDir: '.vitepress/dist',
 
   head: [
-    ['link', { rel: 'icon', href: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Go-logo.svg/200px-Go-logo.svg.png', type: 'image/png' }],
+    ['link', { rel: 'icon', href: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Go-Logo.svg/200px-Go-Logo.svg.png', type: 'image/png' }],
   ],
 
   themeConfig: {
-    logo: {
-      src: '/logo.svg',
-      width: 64,
-      height: 64,
-    },
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Go-Logo.svg/200px-Go-Logo.svg.png',
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Getting Started', link: '/getting-started/' },
-      { text: 'Architecture', link: '/architecture/overview/' },
-      { text: 'Guides', link: '/guides/service-registration/' },
-      { text: 'Cross-Language', link: '/cross-language/overview/' },
-      { text: 'API Reference', link: '/api/go-server/' },
-      { text: 'Deployment', link: '/deployment/docker/' },
-      { text: 'Contributing', link: '/contributing/' },
+      { text: 'Architecture', link: '/architecture/' },
+      { text: 'Guides', link: '/guides/' },
+      { text: 'API Reference', link: '/api/' },
+      { text: 'Deployment', link: '/deployment/' },
     ],
 
     sidebar: {
@@ -66,16 +57,6 @@ export default defineConfig({
             { text: 'Observability', link: '/guides/observability/' },
             { text: 'Authentication', link: '/guides/authentication/' },
             { text: 'Rate Limiting', link: '/guides/rate-limiting/' },
-          ],
-        },
-        {
-          text: 'Cross-Language',
-          collapsed: true,
-          items: [
-            { text: 'Overview', link: '/cross-language/overview/' },
-            { text: 'Python Client', link: '/cross-language/python/' },
-            { text: 'TypeScript Client', link: '/cross-language/typescript/' },
-            { text: 'Code Generation', link: '/cross-language/code-generation/' },
           ],
         },
         {

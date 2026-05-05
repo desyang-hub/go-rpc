@@ -40,3 +40,9 @@ coverage*
 
 # Changelog tool
 .git-cliff
+
+# VitePress documentation dependencies
+node_modules/
+docs/node_modules/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
