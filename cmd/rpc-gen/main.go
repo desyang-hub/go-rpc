@@ -15,47 +15,23 @@ import (
 
 var version = "dev"
 
-func main() {
-	rootCmd := &cobra.Command{
-		Use:   "rpc-gen",
-		Short: "RPC code generation tool",
-		Long:  "A powerful CLI tool for generating RPC code in multiple languages from proto definitions.",
-	}
-
-	rootCmd.AddCommand(versionCmd())
-	rootCmd.AddCommand(genCmd())
-
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
-}
-
-func versionCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "version",
-		Short: "Print version information",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("rpc-gen version %s\n", version)
-		},
-	}
-}
-
-func genCmd() *cobra.Command {
+// generateCmd builds the "gen" subcommand with all supported options.
+func generateCmd() *cobra.Command {
 	var (
-		protoPath     string
-		lang          string
-		outputDir     string
-		packageName   string
-		dryRun        bool
+		protoPath      string
+		lang           string
+		outputDir      string
+		packageName    string
+		dryRun         bool
 		generateServer bool
-		generateReact bool
+		generateReact  bool
+		generateGateway bool // New: Generate gRPC-gateway HTTP handlers
 	)
 
 	cmd := &cobra.Command{
 		Use:   "gen",
 		Short: "Generate RPC code from proto file",
-		Long:  "Generate client/server code from proto file for the specified language.",
+		Long:  "Generate client/server code from proto file for the specified language with optional gateway support.",
 		PreRunE: func(cmd *cobra.Command, args []string) error {
 			if protoPath == "" {
 				return fmt.Errorf("proto file path is required (--proto)")
@@ -78,9 +54,9 @@ func genCmd() *cobra.Command {
 
 			// Create plugin registry and register plugins
 			registry := generators.NewPluginRegistry()
-			registry.Register(go_generator.NewGoPlugin())
-			registry.Register(generators.NewPythonPlugin())
-			registry.Register(generators.NewTypeScriptPlugin())
+			registry.AttachPlugin(go_generator.NewGoPlugin())
+			registry.AttachPlugin(python.NewPlugin())
+			registry.AttachPlugin(typescript.NewPlugin())
 
 			// Get the plugin
 			plugin, err := registry.Get(lang)
@@ -88,7 +64,7 @@ func genCmd() *cobra.Command {
 				return fmt.Errorf("failed to get plugin: %w", err)
 			}
 
-			// Build generation config
+			// Build generation config with gateway option
 			config := generators.GenConfig{
 				ProtoFile:   protoPath,
 				OutputDir:   outputDir,
@@ -96,8 +72,11 @@ func genCmd() *cobra.Command {
 				Language:    lang,
 				DryRun:      dryRun,
 				Options: map[string]string{
-					"generate_server": fmt.Sprint(generateServer),
-					"generate_react":  fmt.Sprint(generateReact),
+					"generate_server":      fmt.Sprint(generateServer),
+					"generate_react":       fmt.Sprint(generateReact),
+					"generate_gateway":     fmt.Sprint(generateGateway),
+					"gateway_port":         "8081",
+					"gateway_host":         "localhost",
 				},
 			}
 
@@ -110,7 +89,11 @@ func genCmd() *cobra.Command {
 			// Print summary
 			fmt.Printf("Generated %d file(s):\n", len(files))
 			for _, f := range files {
-				fmt.Printf("  %s (%s)\n", f.Path, f.Description)
+				e := "OK"
+				if f.Error != nil {
+					e = fmt.Sprintf("ERROR: %v", f.Error)
+				}
+				fmt.Printf("  %s (%s%s)\n", f.Path, f.Description, e)
 			}
 
 			return nil
@@ -123,7 +106,40 @@ func genCmd() *cobra.Command {
 	cmd.Flags().StringVar(&packageName, "package", "", "Package name for output")
 	cmd.Flags().BoolVar(&dryRun, "dry-run", false, "Print output instead of writing files")
 	cmd.Flags().BoolVar(&generateServer, "generate-server", false, "Generate server stubs")
-	cmd.Flags().BoolVar(&generateReact, "react", false, "Generate React Hooks (TypeScript only)")
+	cmd.Flags().BoolVar(&generateReact, "react", false, "Generate React/Vue Hooks (TypeScript only)")
+	cmd.Flags().BoolVar(&generateGateway, "gateway", false, "Generate gRPC-gateway HTTP handlers (Go)")
+
+	cmd.MarkFlagRequired("proto")
+	cmd.MarkFlagRequired("lang")
+	cmd.MarkFlagRequired("output")
 
 	return cmd
+}
+
+// versionCmd prints version information
+func versionCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "Print version information",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("rpc-gen version %s\n", version)
+		},
+	}
+}
+
+// main is the entry point for the rpc-gen CLI tool
+func main() {
+	rootCmd := &cobra.Command{
+		Use:   "rpc-gen",
+		Short: "RPC code generation tool",
+		Long:  "A powerful CLI tool for generating RPC code in multiple languages from proto definitions.",
+	}
+
+	rootCmd.AddCommand(versionCmd())
+	rootCmd.AddCommand(generateCmd())
+
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
 }

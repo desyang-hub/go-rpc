@@ -4,6 +4,10 @@ package go_rpc.api.v1;
 
 option go_package = "github.com/desyang/go-rpc/api;genapi";
 
+// ==================== gRPC-Gateway Options ====================
+import "google/api/annotations.proto";
+import "google/api/http.proto";
+
 // ==================== HelloService 示例服务 ====================
 
 // HelloRequest 定义请求消息结构
@@ -31,21 +35,6 @@ message HelloStreamResponse {
   int32 response_index = 2;  // 响应序号
 }
 
-// HelloService 定义四种调用模式的 RPC 服务
-service HelloService {
-  // UnaryRPC: 一元 RPC（请求-响应模式）
-  rpc Hello (HelloRequest) returns (HelloResponse);
-
-  // ServerStreaming: 服务端流式 RPC（1 个请求 -> N 个响应）
-  rpc HelloStream (HelloRequest) returns (stream HelloStreamResponse);
-
-  // ClientStreaming: 客户端流式 RPC（N 个请求 -> 1 个响应）
-  rpc BatchHello (stream HelloRequest) returns (HelloResponse);
-
-  // BidirectionalStreaming: 双向流式 RPC（N 个请求 <-> N 个响应）
-  rpc HelloStreamStream (stream HelloStreamRequest) returns (stream HelloStreamResponse);
-}
-
 // ==================== EchoService 性能测试服务 ====================
 
 message EchoRequest {
@@ -69,13 +58,6 @@ message EchoStreamResponse {
   int32 index = 2;
 }
 
-// EchoService 用于性能基准测试
-service EchoService {
-  rpc Echo (EchoRequest) returns (EchoResponse);
-  rpc EchoStream (EchoRequest) returns (stream EchoStreamResponse);
-  rpc Ping (PingRequest) returns (PingResponse);
-}
-
 message PingRequest {
   string payload = 1;
 }
@@ -84,4 +66,43 @@ message PingResponse {
   string payload = 1;
   string timestamp = 2;
   int64 latency_us = 3;      // 往返延迟（微秒）
+}
+
+// ==================== Service Definitions ====================
+
+// HelloService 定义四种调用模式的 RPC 服务
+service HelloService {
+  // UnaryRPC: 一元 RPC（请求-响应模式）
+  rpc Hello (HelloRequest) returns (HelloResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/hello"
+      body: "*"
+    };
+  }
+
+  // ServerStreaming: 服务端流式 RPC（1 个请求 -> N 个响应）
+  rpc HelloStream (HelloRequest) returns (stream HelloStreamResponse);
+
+  // ClientStreaming: 客户端流式 RPC（N 个请求 -> 1 个响应）
+  rpc BatchHello (stream HelloRequest) returns (HelloResponse);
+
+  // BidirectionalStreaming: 双向流式 RPC（N 个请求 <-> N 个响应）
+  rpc HelloStreamStream (stream HelloStreamRequest) returns (stream HelloStreamResponse);
+}
+
+// EchoService 用于性能基准测试
+service EchoService {
+  rpc Echo (EchoRequest) returns (EchoResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/echo"
+      body: "*"
+    };
+  }
+
+  rpc EchoStream (EchoRequest) returns (stream EchoStreamResponse);
+  rpc Ping (PingRequest) returns (PingResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/ping"
+    };
+  }
 }
